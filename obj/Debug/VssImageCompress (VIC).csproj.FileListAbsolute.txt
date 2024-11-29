@@ -1,0 +1,10 @@
+D:\VssImageCompress (VIC)\obj\Debug\VssImageCompress (VIC).csproj.AssemblyReference.cache
+D:\VssImageCompress (VIC)\obj\Debug\VssImageCompress__VIC_.frm_compress.resources
+D:\VssImageCompress (VIC)\obj\Debug\VssImageCompress__VIC_.Properties.Resources.resources
+D:\VssImageCompress (VIC)\obj\Debug\VssImageCompress (VIC).csproj.GenerateResource.cache
+D:\VssImageCompress (VIC)\obj\Debug\VssImageCompress (VIC).csproj.CoreCompileInputs.cache
+D:\VssImageCompress (VIC)\bin\Debug\VssImageCompressor (VIC).exe.config
+D:\VssImageCompress (VIC)\bin\Debug\VssImageCompressor (VIC).exe
+D:\VssImageCompress (VIC)\bin\Debug\VssImageCompressor (VIC).pdb
+D:\VssImageCompress (VIC)\obj\Debug\VssImageCompressor (VIC).exe
+D:\VssImageCompress (VIC)\obj\Debug\VssImageCompressor (VIC).pdb
