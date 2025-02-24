@@ -1,0 +1,86 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\VssImageCompress (VIC)\\VssImageCompress (VIC).csproj": {}
+  },
+  "projects": {
+    "E:\\VssImageCompress (VIC)\\VssImageCompress (VIC).csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\VssImageCompress (VIC)\\VssImageCompress (VIC).csproj",
+        "projectName": "VssImageCompressor (VIC)",
+        "projectPath": "E:\\VssImageCompress (VIC)\\VssImageCompress (VIC).csproj",
+        "packagesPath": "C:\\Users\\fanhu\\.nuget\\packages\\",
+        "outputPath": "E:\\VssImageCompress (VIC)\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "UsingMicrosoftNETSdk": false,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\fanhu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "dependencies": {
+            "PDFium.x64": {
+              "target": "Package",
+              "version": "[4648.0.0, )"
+            },
+            "PDFium.x86": {
+              "target": "Package",
+              "version": "[4648.0.0, )"
+            },
+            "PdfiumViewer": {
+              "target": "Package",
+              "version": "[2.13.0, )"
+            },
+            "PdfiumViewer.Native.x86.v8-xfa": {
+              "target": "Package",
+              "version": "[2018.4.8.256, )"
+            },
+            "PdfiumViewer.Native.x86_64.v8-xfa": {
+              "target": "Package",
+              "version": "[2018.4.8.256, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-arm64": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

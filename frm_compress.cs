@@ -18,6 +18,10 @@ using File = System.IO.File;
 using Image = System.Drawing.Image;
 using TextBox = System.Windows.Forms.TextBox;
 using ToolTip = System.Windows.Forms.ToolTip;
+using PdfiumViewer;
+using System.Security.Cryptography;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+
 namespace VssImageCompress__VIC_
 {
     public partial class frm_compress : Form
@@ -37,9 +41,13 @@ namespace VssImageCompress__VIC_
             {
                 compressfolder();
             }
-            else
+            if (ck_pdf.Checked == true)
             {
-                compressimage();
+                compresspdf();
+            }
+            if (ck_file.Checked == true)
+            {
+                compressfile();
             }
         }
         private void fixheight()
@@ -54,19 +62,140 @@ namespace VssImageCompress__VIC_
             this.Height = this.MaximumSize.Height;
             this.gb2.Height = this.gb2.MaximumSize.Height;
         }
-        private async void compressimage()
+        private async void compresspdf()
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.gif;*.tif;...";
-            ofd.Multiselect = true;
-            ofd.Title = "Vui lòng chọn ảnh cần nén";
+            ofd.Filter = "PDF Files|*.pdf";
+            ofd.Title = "Vui lòng chọn file PDF cần chuyển đổi & nén";
+            ofd.ValidateNames = true;
+            ofd.CheckFileExists = true;
+            ofd.CheckPathExists = true;
+            ofd.RestoreDirectory = true;
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                fixheight();
+                int soluong = ofd.FileNames.Count();
+                var outputFolder = Path.Combine(Path.GetDirectoryName(ofd.FileName), Path.GetFileNameWithoutExtension(ofd.FileName));
 
+                using (var document = PdfDocument.Load(ofd.FileName))
+                {
+                    progressBar1.Visible = true;
+                    soluong = 0;
+
+                    for (int i = 0; i < document.PageCount; i++)
+                    {
+                        progressBar1.Maximum = document.PageCount; // Cập nhật giá trị tối đa của ProgressBar
+                        progressBar1.Value = soluong; // Đặt giá trị ban đầu là 0
+                        string outputPath = Path.Combine(outputFolder, $"Page_{i + 1}.jpg");
+                        if (document.PageCount == 1)
+                        {
+                            outputPath = Path.Combine(Path.GetDirectoryName(ofd.FileName), Path.GetFileNameWithoutExtension(ofd.FileName) + $".jpg");
+                            outputFolder = Path.GetDirectoryName(ofd.FileName);
+                        }
+                        else
+                        {
+                            if (!Directory.Exists(outputFolder))
+                            {
+                                Directory.CreateDirectory(outputFolder);
+                            }
+                        }
+
+                        txt_destination.Text = outputFolder;
+
+                        using (var image = document.Render(i, 1000, 1000, true))
+                        {
+                            await Task.Run(() =>
+                            {
+                                // Resize nếu cần thiết
+                                Image resizedImage = ResizeImageToTargetSize(image, 1000, 1000); // Giữ ảnh trong kích thước 1000x1000
+
+                                long quality = 100; // Bắt đầu từ chất lượng cao nhất
+                                bool isCompressed = false;
+
+                                // Lặp để giảm chất lượng ảnh cho đến khi đạt dung lượng yêu cầu
+                                while (!isCompressed && quality > 0)
+                                {
+                                    using (MemoryStream ms = new MemoryStream())
+                                    {
+                                        ImageCodecInfo jpegCodec = GetEncoder(ImageFormat.Jpeg);
+                                        if (jpegCodec == null) throw new Exception("JPEG codec not found");
+
+                                        EncoderParameters encoderParams = new EncoderParameters(1);
+                                        encoderParams.Param[0] = new EncoderParameter(Encoder.Quality, quality);
+
+                                        resizedImage.Save(ms, jpegCodec, encoderParams);
+
+                                        if (ms.Length < int.Parse(txt_imgsize.Text) * 1024)
+                                        {
+                                            // Lưu ảnh khi đạt yêu cầu, nếu tồn tại thì tăng thứ tự file lên
+                                            File.WriteAllBytes(GetUniqueFilePath(outputPath), ms.ToArray());
+                                            isCompressed = true;
+                                        }
+                                    }
+
+                                    quality -= 5; // Giảm chất lượng theo từng bước
+                                }
+
+                                if (!isCompressed)
+                                {
+                                    Console.WriteLine("Không thể nén ảnh về dung lượng yêu cầu.");
+                                    //MessageBox.Show("Không thể nén ảnh về dung lượng yêu cầu.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Ảnh đã được nén và lưu tại {outputPath}");
+                                    //pictureBox2.Image = resizedImage;
+                                    // image.Save(outputPath);
+                                    //MessageBox.Show("Ảnh đã được nén !");
+                                }
+                                resizedImage.Dispose(); // Giải phóng tài nguyên
+                                soluong++;
+                            });
+
+                            progressBar1.Invoke((Action)(() =>
+                            {
+                                progressBar1.Value++; // Cập nhật giá trị ProgressBar sau mỗi ảnh
+                                int percent = (int)(((double)progressBar1.Value / (double)progressBar1.Maximum) * 100);
+                                progressBar1.Refresh();
+                                progressBar1.CreateGraphics().DrawString(percent.ToString() + "%",
+                                    new Font("Arial", (float)8.25, FontStyle.Regular),
+                                    Brushes.Black,
+                                    new PointF(progressBar1.Width / 2 - 10, progressBar1.Height / 2 - 7));
+                            }));
+
+                        }
+                    }
+                }
+                progressBar1.Visible = false;
+                DialogResult dialogResult = MessageBox.Show("Đã hoàn thành nén " + soluong + " ảnh.\r\nBạn có muốn mở thư mục ảnh sau khi nén?", "THÔNG BÁO", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    try
+                    {
+                        Process.Start(txt_destination.Text);
+                    }
+                    catch (Win32Exception win32Exception)
+                    {
+                        //The system cannot find the file specified...
+                        Console.WriteLine(win32Exception.Message);
+                    }
+                }
+            }
+        }
+        private async void compressfile()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png";
+            ofd.Title = "Vui lòng chọn ảnh cần nén";
 
             ofd.ValidateNames = true;
             ofd.CheckFileExists = true;
             ofd.CheckPathExists = true;
             ofd.RestoreDirectory = true;
-
+            
+            ofd.Multiselect = true;
+                     
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 fixheight();
@@ -81,7 +210,7 @@ namespace VssImageCompress__VIC_
                 }
 
                 string compressedfolder = txt_destination.Text;
-                
+
                 int soluong = ofd.FileNames.Count();
 
                 if (ofd.FileNames.Count() > 0)
@@ -115,7 +244,6 @@ namespace VssImageCompress__VIC_
                         }));
                     }
                 }
-
                 DialogResult dialogResult = MessageBox.Show("Đã hoàn thành nén " + soluong + " ảnh.\r\nBạn có muốn mở thư mục ảnh sau khi nén?", "THÔNG BÁO", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (dialogResult == DialogResult.Yes)
                 {
@@ -131,11 +259,11 @@ namespace VssImageCompress__VIC_
                 }
             }
         }
-
+        
         private async void compressfolder()
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.gif;*.tif;...";
+            ofd.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png";
             ofd.Multiselect = false;
             ofd.Title = "Vui lòng chọn thư mục cần nén ảnh";
 
@@ -152,7 +280,7 @@ namespace VssImageCompress__VIC_
                 fixheight();
                 //pictureBox1.Image = Image.FromFile(ofd.FileName);
                 txt_source.Text = Path.GetDirectoryName(ofd.FileName);
-                
+
                 if (txt_destination.Text.Length == 0)
                 {
                     txt_destination.Text = txt_source.Text;
@@ -293,6 +421,7 @@ namespace VssImageCompress__VIC_
                 File.Delete(tempJpgPath);
             }
         }
+
         static string GetUniqueFilePath(string filePath)
         {
             string directory = Path.GetDirectoryName(filePath);
@@ -408,29 +537,26 @@ namespace VssImageCompress__VIC_
             //    e.Handled = true;
             //}
         }
-
-        private void ck_file_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (ck_file.Checked)
+            System.Windows.Forms.CheckBox changedCheckBox = sender as System.Windows.Forms.CheckBox;
+            if (changedCheckBox.Checked)
             {
-                ck_folder.Checked = false;
-            }
-            else
-            {
-                ck_folder.Checked = true;
-            }
-        }
-
-        private void ck_folder_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ck_folder.Checked)
-            {
-                ck_file.Checked = false;
-            }
-            else
-            {
-                ck_file.Checked = true;
-
+                    if (changedCheckBox.Text.Contains("PDF"))
+                    {
+                        btn_compress.Text = "Nén PDF";
+                    }
+                    else
+                    {
+                        btn_compress.Text = "Nén Ảnh";
+                    }
+                    foreach (Control control in groupBox1.Controls)
+                    {
+                        if (control is System.Windows.Forms.CheckBox checkbox && checkbox != changedCheckBox)
+                        {
+                            checkbox.Checked = false;
+                        }
+                    }
             }
         }
 

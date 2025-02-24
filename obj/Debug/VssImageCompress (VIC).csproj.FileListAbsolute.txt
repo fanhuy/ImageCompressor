@@ -8,3 +8,24 @@ D:\VssImageCompress (VIC)\bin\Debug\VssImageCompressor (VIC).exe
 D:\VssImageCompress (VIC)\bin\Debug\VssImageCompressor (VIC).pdb
 D:\VssImageCompress (VIC)\obj\Debug\VssImageCompressor (VIC).exe
 D:\VssImageCompress (VIC)\obj\Debug\VssImageCompressor (VIC).pdb
+D:\VssImageCompress (VIC)\bin\Debug\PdfiumViewer.dll
+D:\VssImageCompress (VIC)\bin\Debug\nl\PdfiumViewer.resources.dll
+D:\VssImageCompress (VIC)\bin\Debug\x64\pdfium.dll
+D:\VssImageCompress (VIC)\bin\Debug\x86\pdfium.dll
+D:\VssImageCompress (VIC)\obj\Debug\VssImageCompress (VIC).csproj.SuggestedBindingRedirects.cache
+D:\VssImageCompress (VIC)\obj\Debug\VssImageCompress (VIC).csproj.CopyComplete
+E:\VssImageCompress (VIC)\bin\Debug\x86\pdfium.dll
+E:\VssImageCompress (VIC)\bin\Debug\x64\pdfium.dll
+E:\VssImageCompress (VIC)\bin\Debug\VssImageCompressor (VIC).exe.config
+E:\VssImageCompress (VIC)\bin\Debug\VssImageCompressor (VIC).exe
+E:\VssImageCompress (VIC)\bin\Debug\VssImageCompressor (VIC).pdb
+E:\VssImageCompress (VIC)\bin\Debug\PdfiumViewer.dll
+E:\VssImageCompress (VIC)\bin\Debug\nl\PdfiumViewer.resources.dll
+E:\VssImageCompress (VIC)\obj\Debug\VssImageCompress (VIC).csproj.AssemblyReference.cache
+E:\VssImageCompress (VIC)\obj\Debug\VssImageCompress__VIC_.frm_compress.resources
+E:\VssImageCompress (VIC)\obj\Debug\VssImageCompress__VIC_.Properties.Resources.resources
+E:\VssImageCompress (VIC)\obj\Debug\VssImageCompress (VIC).csproj.GenerateResource.cache
+E:\VssImageCompress (VIC)\obj\Debug\VssImageCompress (VIC).csproj.CoreCompileInputs.cache
+E:\VssImageCompress (VIC)\obj\Debug\VssImage.2C741FD9.Up2Date
+E:\VssImageCompress (VIC)\obj\Debug\VssImageCompressor (VIC).exe
+E:\VssImageCompress (VIC)\obj\Debug\VssImageCompressor (VIC).pdb

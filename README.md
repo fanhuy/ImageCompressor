@@ -1,5 +1,5 @@
 <h1 align="center"># ImageCompressor</h1>
-<p align="center">Công cụ nén ảnh, giảm dung lượng ảnh</p>
+<p align="center">Công cụ nén ảnh, giảm dung lượng ảnh, chuyển đổi file PDF sang ảnh và nén ảnh</p>
 ❤️ <b>Tải về</b>
 <br>
 - Bạn có thể tải trực tiếp công cụ đã được build sẵn tại đây:
